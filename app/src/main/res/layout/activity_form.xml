@@ -23,7 +23,6 @@
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="save"
-        android:onClick="saveInfo"/>
+        android:text="save"/>
 
 </LinearLayout>

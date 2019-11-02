@@ -32,28 +32,17 @@ public class FormActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_form);
 
-        edit1 = (EditText) findViewById(R.id.editText1);
-        edit2 = (EditText) findViewById(R.id.editText2);
-    }
-
-    public void saveInfo(View view) {
-        saveBtn = (Button) findViewById(R.id.btnSave);
+        edit1 = findViewById(R.id.editText1);
+        edit2 = findViewById(R.id.editText2);
+        saveBtn = findViewById(R.id.btnSave);
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Bundle bundle = new Bundle();
-                String info = edit1.getText().toString() + edit2.getText().toString();
-//                bundle.putString("info", info1 + info2);
-//                HomeFragment homeFragment = new HomeFragment();
-//                homeFragment.setArguments(bundle);
-//                FragmentManager manager = getSupportFragmentManager();
-//                FragmentTransaction transaction = manager.beginTransaction();
-//                transaction.replace(R.id.text_home, homeFragment);
-//                transaction.commit();
                 Intent intent = new Intent(FormActivity.this, MainActivity.class);
-                intent.putExtra("info", info);
+                intent.putExtra("info1", edit1.getText().toString());
+                intent.putExtra("info2", edit2.getText().toString());
                 startActivity(intent);
-                Log.d("ron", edit1.getText().toString() + edit2.getText().toString());
+                //Log.d("ron", edit1.getText().toString() + edit2.getText().toString());
             }
         });
     }
