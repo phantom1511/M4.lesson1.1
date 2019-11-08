@@ -9,6 +9,8 @@ import com.google.android.material.snackbar.Snackbar;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -47,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent intent = new Intent(MainActivity.this, FormActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 100);
 
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
@@ -80,5 +82,13 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        fragment.getChildFragmentManager().getFragments().get(0)
+                .onActivityResult(requestCode, resultCode, data);
     }
 }
