@@ -45,7 +45,7 @@ public class FormActivity extends AppCompatActivity {
         task = (Task) getIntent().getSerializableExtra("homeFragment");
 
         if (task != null) {
-            editTitle.setText(task.getTitle(), TextView.BufferType.EDITABLE);
+            editTitle.setText(task.getTitle());
             editDesc.setText(task.getDesc(), TextView.BufferType.EDITABLE);
         }
 

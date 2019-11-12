@@ -1,8 +1,11 @@
 package com.dastan.m4lesson11;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.dastan.m4lesson11.onBoard.OnBoardActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -35,6 +38,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences preferences = getSharedPreferences("settings", Context.MODE_PRIVATE);
+        boolean isShown = preferences.getBoolean("isShown", false);
+
+        SharedPreferences preferences1 = getSharedPreferences("skip", Context.MODE_PRIVATE);
+        boolean showed = preferences1.getBoolean("showed", false);
+
+        if (!isShown){
+            startActivity(new Intent(this, OnBoardActivity.class));
+            finish();
+            return;
+        }
+
+        if (!showed){
+            startActivity(new Intent(this, OnBoardActivity.class));
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_main);
 
         String editText1 = getIntent().getStringExtra("info1");
