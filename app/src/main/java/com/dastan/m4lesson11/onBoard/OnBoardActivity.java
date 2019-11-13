@@ -15,6 +15,7 @@ public class OnBoardActivity extends AppCompatActivity {
 
     ViewPager viewPager;
     TabLayout tabLayout;
+    TabLayout skipBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,9 @@ public class OnBoardActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         tabLayout = findViewById(R.id.tabDots);
         tabLayout.setupWithViewPager(viewPager, true);
+        skipBtn = findViewById(R.id.tabBtnSkip);
+        skipBtn.setupWithViewPager(viewPager, true);
+
     }
 
     public class SectionPagerAdapter extends FragmentPagerAdapter{

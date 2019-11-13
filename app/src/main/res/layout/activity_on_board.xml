@@ -7,6 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".onBoard.OnBoardActivity">
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabBtnSkip"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:tabBackground="@drawable/tab_selector"
+        app:tabGravity="center"
+        android:foregroundGravity="left"
+        app:tabIndicatorHeight="0dp"/>
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"

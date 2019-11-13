@@ -45,13 +45,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences1 = getSharedPreferences("skip", Context.MODE_PRIVATE);
         boolean showed = preferences1.getBoolean("showed", false);
 
-        if (!isShown){
-            startActivity(new Intent(this, OnBoardActivity.class));
-            finish();
-            return;
-        }
-
-        if (!showed){
+        if (!isShown && !showed){
             startActivity(new Intent(this, OnBoardActivity.class));
             finish();
             return;
