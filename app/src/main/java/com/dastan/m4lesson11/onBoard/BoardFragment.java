@@ -38,12 +38,12 @@ public class BoardFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_board, container, false);
-        View viewSkip =  inflater.inflate(R.layout.activity_on_board, container, false);
+        //View viewSkip =  inflater.inflate(R.layout.activity_on_board, container, false);
         int pos = getArguments().getInt("pos");
         ImageView imageView = view.findViewById(R.id.imageView);
         TextView textView = view.findViewById(R.id.textView);
         Button button = view.findViewById(R.id.btnStart);
-        Button button1 = viewSkip.findViewById(R.id.skipBtn);
+        //Button button1 = viewSkip.findViewById(R.id.skipBtn);
 
         switch (pos){
             case 0:
@@ -63,7 +63,7 @@ public class BoardFragment extends Fragment {
                 textView.setText("Siii!!!");
                 imageView.setImageResource(R.drawable.cris3);
                 view.setBackgroundColor(Color.parseColor("#E6B534"));
-                button1.setVisibility(View.INVISIBLE);
+                //button1.setVisibility(View.INVISIBLE);
                 break;
         }
 

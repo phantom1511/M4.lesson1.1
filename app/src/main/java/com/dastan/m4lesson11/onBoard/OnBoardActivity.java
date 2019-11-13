@@ -6,7 +6,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +43,8 @@ public class OnBoardActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         startActivity(new Intent(this, MainActivity.class));
         finish();
+        SharedPreferences preferences = getSharedPreferences("settings", Context.MODE_PRIVATE);
+        preferences.edit().putBoolean("isShown", true).apply();
         Log.e("ron", "skip");
     }
 
