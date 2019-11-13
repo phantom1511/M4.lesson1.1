@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,11 +38,12 @@ public class BoardFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =  inflater.inflate(R.layout.fragment_board, container, false);
+        View viewSkip =  inflater.inflate(R.layout.activity_on_board, container, false);
         int pos = getArguments().getInt("pos");
         ImageView imageView = view.findViewById(R.id.imageView);
         TextView textView = view.findViewById(R.id.textView);
         Button button = view.findViewById(R.id.btnStart);
-        Button button1 = view.findViewById(R.id.skipBtn);
+        Button button1 = viewSkip.findViewById(R.id.skipBtn);
 
         switch (pos){
             case 0:
@@ -55,13 +57,13 @@ public class BoardFragment extends Fragment {
                 textView.setText("He is the best player in the world MF*");
                 imageView.setImageResource(R.drawable.cris2);
                 button.setVisibility(View.INVISIBLE);
-                view.setBackgroundColor(Color.parseColor("#DA3535"));
+                view.setBackgroundColor(Color.parseColor("#328D32"));
                 break;
             case 2:
                 textView.setText("Siii!!!");
                 imageView.setImageResource(R.drawable.cris3);
-                button1.setVisibility(View.INVISIBLE);
                 view.setBackgroundColor(Color.parseColor("#E6B534"));
+                button1.setVisibility(View.INVISIBLE);
                 break;
         }
 
@@ -72,18 +74,10 @@ public class BoardFragment extends Fragment {
                 getActivity().finish();
                 SharedPreferences preferences = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE);
                 preferences.edit().putBoolean("isShown", true).apply();
+                Log.e("ron", "start");
             }
         });
 
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getContext(), MainActivity.class));
-                getActivity().finish();
-                SharedPreferences preferences = getActivity().getSharedPreferences("skip", Context.MODE_PRIVATE);
-                preferences.edit().putBoolean("showed", true).apply();
-            }
-        });
         return view;
     }
 

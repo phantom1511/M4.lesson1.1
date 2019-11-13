@@ -7,16 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".onBoard.OnBoardActivity">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabBtnSkip"
-        android:layout_alignParentTop="true"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/skipBtn"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Skip"
+        android:layout_alignParentRight="true"
         android:layout_marginTop="20dp"
-        app:tabBackground="@drawable/tab_selector"
-        app:tabGravity="center"
-        android:foregroundGravity="left"
-        app:tabIndicatorHeight="0dp"/>
+        android:layout_marginRight="20dp"
+        android:background="@null"
+        android:textStyle="italic"
+        android:textColor="#69B7EE"/>
+
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

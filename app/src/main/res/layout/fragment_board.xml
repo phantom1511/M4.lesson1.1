@@ -8,12 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".onBoard.BoardFragment">
 
-    <Button
-        android:id="@+id/skipBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Skip"
-        android:layout_gravity="right"/>
 
     <ImageView
         android:id="@+id/imageView"
@@ -39,7 +33,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Get Started"
-        android:layout_marginTop="40dp"/>
+        android:textColor="#E6B534"
+        android:layout_marginTop="40dp"
+        android:background="#15151A"/>
 
 
 

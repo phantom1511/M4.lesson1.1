@@ -6,16 +6,21 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
+import com.dastan.m4lesson11.MainActivity;
 import com.dastan.m4lesson11.R;
 import com.google.android.material.tabs.TabLayout;
 
-public class OnBoardActivity extends AppCompatActivity {
+public class OnBoardActivity extends AppCompatActivity implements View.OnClickListener {
 
     ViewPager viewPager;
     TabLayout tabLayout;
-    TabLayout skipBtn;
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,9 +32,16 @@ public class OnBoardActivity extends AppCompatActivity {
         viewPager.setAdapter(adapter);
         tabLayout = findViewById(R.id.tabDots);
         tabLayout.setupWithViewPager(viewPager, true);
-        skipBtn = findViewById(R.id.tabBtnSkip);
-        skipBtn.setupWithViewPager(viewPager, true);
+        button = findViewById(R.id.skipBtn);
+        button.setOnClickListener(this);
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
+        Log.e("ron", "skip");
     }
 
     public class SectionPagerAdapter extends FragmentPagerAdapter{
