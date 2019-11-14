@@ -10,8 +10,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -42,10 +44,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("settings", Context.MODE_PRIVATE);
         boolean isShown = preferences.getBoolean("isShown", false);
 
-        SharedPreferences preferences1 = getSharedPreferences("skip", Context.MODE_PRIVATE);
-        boolean showed = preferences1.getBoolean("showed", false);
-
-        if (!isShown && !showed){
+        if (!isShown){
             startActivity(new Intent(this, OnBoardActivity.class));
             finish();
             return;
@@ -105,5 +104,15 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
         fragment.getChildFragmentManager().getFragments().get(0)
                 .onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_settings){
+            SharedPreferences preferences = getSharedPreferences("settings", Context.MODE_PRIVATE);
+            preferences.edit().putBoolean("isShown", false).apply();
+            finish();
+        }
+            return super.onOptionsItemSelected(item);
     }
 }

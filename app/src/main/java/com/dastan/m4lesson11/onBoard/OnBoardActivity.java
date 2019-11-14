@@ -36,6 +36,7 @@ public class OnBoardActivity extends AppCompatActivity implements View.OnClickLi
         tabLayout.setupWithViewPager(viewPager, true);
         button = findViewById(R.id.skipBtn);
         button.setOnClickListener(this);
+        viewPager.addOnPageChangeListener(viewPageChangeListener);
 
     }
 
@@ -47,6 +48,28 @@ public class OnBoardActivity extends AppCompatActivity implements View.OnClickLi
         preferences.edit().putBoolean("isShown", true).apply();
         Log.e("ron", "skip");
     }
+
+    ViewPager.OnPageChangeListener viewPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            Button button = findViewById(R.id.skipBtn);
+            if (position == 2){
+                button.setVisibility(View.INVISIBLE);
+            }else {
+                button.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
     public class SectionPagerAdapter extends FragmentPagerAdapter{
 
