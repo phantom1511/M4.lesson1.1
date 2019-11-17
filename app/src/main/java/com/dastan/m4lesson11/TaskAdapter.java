@@ -67,6 +67,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
                 }
             });
 
+            textTitle = itemView.findViewById(R.id.textTitle);
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onItemClickListener.onLongClick(getAdapterPosition());
+                    return true;
+                }
+            });
+
+            textDesc = itemView.findViewById(R.id.textDesc);
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    onItemClickListener.onLongClick(getAdapterPosition());
+                    return true;
+                }
+            });
 
         }
 

@@ -29,13 +29,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import static com.dastan.m4lesson11.ui.home.HomeFragment.sortMethod;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private static List<Task> list;
+    private static TaskAdapter adapter;
+    private Task task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("settings", Context.MODE_PRIVATE);
         boolean isShown = preferences.getBoolean("isShown", false);
 
-        if (!isShown){
+        if (!isShown) {
             startActivity(new Intent(this, OnBoardActivity.class));
             finish();
             return;
@@ -82,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
+
     }
 
     @Override
@@ -98,21 +110,43 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        fragment.getChildFragmentManager().getFragments().get(0)
-                .onActivityResult(requestCode, resultCode, data);
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+//        fragment.getChildFragmentManager().getFragments().get(0)
+//                .onActivityResult(requestCode, resultCode, data);
+//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_settings){
+        if (item.getItemId() == R.id.action_exit) {
             SharedPreferences preferences = getSharedPreferences("settings", Context.MODE_PRIVATE);
             preferences.edit().putBoolean("isShown", false).apply();
             finish();
+        } else if (item.getItemId() == R.id.action_sort) {
+
+            Log.e("ron", "sorted");
+            sortMethod();
+
+//            if (list != list.sort(task);) {
+//                Log.e("ron", "sorted");
+//                sortMethod();
+//            } else {
+//                Log.e("ron", "not sorted");
+//            }
         }
-            return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
     }
+
+
+//    public static void sortMethod() {
+//        Collections.sort(list, new Comparator<Task>() {
+//            @Override
+//            public int compare(Task o1, Task o2) {
+//                return o1.getTitle().compareTo(o2.getTitle());
+//            }
+//        });
+//        adapter.notifyDataSetChanged();
+//    }
 }

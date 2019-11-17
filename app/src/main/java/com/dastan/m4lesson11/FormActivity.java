@@ -48,29 +48,24 @@ public class FormActivity extends AppCompatActivity {
             editTitle.setText(task.getTitle());
             editDesc.setText(task.getDesc(), TextView.BufferType.EDITABLE);
         }
-
-//        saveBtn = findViewById(R.id.btnSave);
-//        saveBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(FormActivity.this, MainActivity.class);
-//                intent.putExtra("info1", edit1.getText().toString());
-//                intent.putExtra("info2", edit2.getText().toString());
-//                startActivity(intent);
-//                //Log.d("ron", edit1.getText().toString() + edit2.getText().toString());
-//            }
-//        });
     }
 
     public void onSave(View view) {
         String title = editTitle.getText().toString().trim();
         String desc = editDesc.getText().toString().trim();
-        Intent intent = new Intent();
-        Task task = new Task(title, desc);
-        intent.putExtra("task", task);
-        intent.putExtra("desc", task);
+        //Intent intent = new Intent();
+        if (task != null){
+            task.setTitle(title);
+            task.setDesc(desc);
+            App.getDatabase().taskDao().update(task);
+        }else {
+            task = new Task(title, desc);
+            App.getDatabase().taskDao().insert(task);
+        }
+        //intent.putExtra("task", task);
+        //intent.putExtra("desc", task);
         Log.e("save2", task.getTitle() + task.getDesc());
-        setResult(RESULT_OK, intent);
+        //setResult(RESULT_OK, intent);
         finish();
     }
 }
