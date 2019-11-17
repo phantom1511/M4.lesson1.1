@@ -39,7 +39,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.dastan.m4lesson11.ui.home.HomeFragment.sortMethod;
+import static com.dastan.m4lesson11.ui.home.HomeFragment.setNotSorted;
+import static com.dastan.m4lesson11.ui.home.HomeFragment.setSorted;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private static List<Task> list;
     private static TaskAdapter adapter;
     private Task task;
+    private boolean sort;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,16 +127,15 @@ public class MainActivity extends AppCompatActivity {
             preferences.edit().putBoolean("isShown", false).apply();
             finish();
         } else if (item.getItemId() == R.id.action_sort) {
-
-            Log.e("ron", "sorted");
-            sortMethod();
-
-//            if (list != list.sort(task);) {
-//                Log.e("ron", "sorted");
-//                sortMethod();
-//            } else {
-//                Log.e("ron", "not sorted");
-//            }
+            if (sort == false) {
+                setSorted();
+                sort = true;
+                Log.e("ron", "sorted");
+            } else {
+                setNotSorted();
+                sort = false;
+                Log.e("ron", "not sorted");
+            }
         }
         return super.onOptionsItemSelected(item);
     }

@@ -44,9 +44,10 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private RecyclerView recyclerView;
     private static TaskAdapter adapter;
-    private List<Task> sortedList;
     private Task task;
     private int positionRV;
+    private static List<Task> sorted;
+    private static List<Task> notSorted;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -94,22 +95,43 @@ public class HomeFragment extends Fragment {
         App.getDatabase().taskDao().getAll().observe(this, new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
+                notSorted = tasks;
                 list.clear();
                 list.addAll(tasks);
                 adapter.notifyDataSetChanged();
             }
         });
-    }
 
-    public static void sortMethod(){
-        Collections.sort(list, new Comparator<Task>() {
+        App.getDatabase().taskDao().sortedMethod().observe(this, new Observer<List<Task>>() {
             @Override
-            public int compare(Task o1, Task o2) {
-                return o1.getTitle().compareTo(o2.getTitle());
+            public void onChanged(List<Task> tasks) {
+                sorted = tasks;
             }
         });
+    }
+
+    public static void setSorted(){
+        list.clear();
+        list.addAll(sorted);
         adapter.notifyDataSetChanged();
     }
+
+    public static void setNotSorted(){
+        list.clear();
+        list.addAll(notSorted);
+        adapter.notifyDataSetChanged();
+    }
+
+
+//    public static void sortMethod(){
+//        Collections.sort(list, new Comparator<Task>() {
+//            @Override
+//            public int compare(Task o1, Task o2) {
+//                return o1.getTitle().compareTo(o2.getTitle());
+//            }
+//        });
+//        adapter.notifyDataSetChanged();
+//    }
 
 //    @Override
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {

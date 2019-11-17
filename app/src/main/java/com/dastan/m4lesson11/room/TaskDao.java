@@ -23,6 +23,9 @@ public interface TaskDao {
     @Update
     void update(Task task);
 
+    @Query("SELECT * FROM task ORDER BY title")
+    LiveData<List<Task>> sortedMethod();
+
     @Query("SELECT * FROM task")
     LiveData<List<Task>> getAll();
 
