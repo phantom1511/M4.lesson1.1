@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".PhoneActivity">
+
+    <EditText
+        android:id="@+id/editSmsCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"/>
+
+    <Button
+        android:id="@+id/confirmBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:layout_below="@+id/editSmsCode"
+        android:onClick="onConfirm"/>
+
+    <EditText
+    android:id="@+id/editPhone"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:inputType="phone"
+    android:layout_alignParentTop="true"/>
+
+    <Button
+    android:id="@+id/sendCodeBtn"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Send code"
+    android:onClick="onSendCode"
+    android:layout_below="@+id/editPhone"/>
+
+
+</RelativeLayout>

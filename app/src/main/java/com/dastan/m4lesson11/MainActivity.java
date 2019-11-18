@@ -1,6 +1,8 @@
 package com.dastan.m4lesson11;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -59,6 +62,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (!isShown) {
             startActivity(new Intent(this, OnBoardActivity.class));
+            finish();
+            return;
+        }
+
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            startActivity(new Intent(this, PhoneActivity.class));
             finish();
             return;
         }
@@ -136,6 +145,18 @@ public class MainActivity extends AppCompatActivity {
                 sort = false;
                 Log.e("ron", "not sorted");
             }
+        }
+        if (item.getItemId() == R.id.action_sign_out) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Do you want to sign out?").setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    FirebaseAuth.getInstance().signOut();
+                    finish();
+                }
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
         }
         return super.onOptionsItemSelected(item);
     }
