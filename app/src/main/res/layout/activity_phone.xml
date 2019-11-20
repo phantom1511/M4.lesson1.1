@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,30 +12,32 @@
         android:id="@+id/editSmsCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="number"/>
+        android:hint="Enter sms code"
+        android:inputType="number" />
 
     <Button
         android:id="@+id/confirmBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Confirm"
         android:layout_below="@+id/editSmsCode"
-        android:onClick="onConfirm"/>
+        android:onClick="onConfirm"
+        android:text="Confirm" />
 
     <EditText
-    android:id="@+id/editPhone"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:inputType="phone"
-    android:layout_alignParentTop="true"/>
+        android:id="@+id/editPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:hint="Enter your phone number"
+        android:inputType="phone" />
 
     <Button
-    android:id="@+id/sendCodeBtn"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Send code"
-    android:onClick="onSendCode"
-    android:layout_below="@+id/editPhone"/>
+        android:id="@+id/sendCodeBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editPhone"
+        android:onClick="onSendCode"
+        android:text="Send code" />
 
 
 </RelativeLayout>
