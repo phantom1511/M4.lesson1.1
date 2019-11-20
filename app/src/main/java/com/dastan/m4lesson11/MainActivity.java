@@ -34,6 +34,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -148,11 +149,18 @@ public class MainActivity extends AppCompatActivity {
         }
         if (item.getItemId() == R.id.action_sign_out) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Do you want to sign out?").setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+            builder.setTitle("Do you want to sign out?");
+            builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     FirebaseAuth.getInstance().signOut();
                     finish();
+                }
+            });
+            builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Toast.makeText(getApplicationContext(),"It been Canceled", Toast.LENGTH_SHORT).show();
                 }
             });
             AlertDialog alertDialog = builder.create();

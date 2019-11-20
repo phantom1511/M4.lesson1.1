@@ -81,10 +81,17 @@ public class HomeFragment extends Fragment {
             public void onLongClick(final int position) {
                 //Toast.makeText(getContext(), "long click pos = " + position, Toast.LENGTH_SHORT).show();
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Are you sure you want to delete?").setNegativeButton("Yes", new DialogInterface.OnClickListener() {
+                builder.setTitle("Are you sure you want to delete?");
+                builder.setNegativeButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         App.getDatabase().taskDao().delete(list.get(position));
+                    }
+                });
+                builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getContext(),"It been Canceled", Toast.LENGTH_SHORT).show();
                     }
                 });
                 AlertDialog alertDialog = builder.create();
