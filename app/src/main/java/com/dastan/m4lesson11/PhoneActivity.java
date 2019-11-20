@@ -111,11 +111,11 @@ public class PhoneActivity extends AppCompatActivity {
             return;
         }
 
-        if (code.length() == 6){
-            editSmsCode.setError("Incorrect sms code");
-            editSmsCode.requestFocus();
-            return;
-        }
+//        if (code.length() == 6){
+//            editSmsCode.setError("Incorrect sms code");
+//            editSmsCode.requestFocus();
+//            return;
+//        }
         try {
             PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, code);
             signInWithPhoneAuthCredential(credential);
