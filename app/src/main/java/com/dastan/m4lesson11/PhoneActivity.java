@@ -31,6 +31,8 @@ public class PhoneActivity extends AppCompatActivity {
     private EditText editSmsCode;
     private Button btnSmsCode;
     private String codeSent;
+    private boolean isCodeSent;
+    private PhoneAuthCredential phoneAuthCredential;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,11 @@ public class PhoneActivity extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
                 Log.e("ron", "onVerificationCompleted");
-                //signIn(phoneAuthCredential);
+                if (isCodeSent){
+                    //phoneAuthCredential.getSmsCode();
+                }else{
+                    signIn(phoneAuthCredential);
+                }
             }
 
             @Override
@@ -60,6 +66,7 @@ public class PhoneActivity extends AppCompatActivity {
             public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
                 codeSent = s;
+                isCodeSent = true;
             }
         };
 
@@ -116,29 +123,15 @@ public class PhoneActivity extends AppCompatActivity {
 //            editSmsCode.requestFocus();
 //            return;
 //        }
-        try {
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, code);
-            signInWithPhoneAuthCredential(credential);
-        } catch (Exception e) {
-            Toast toast = Toast.makeText(this, "Verification Code is wrong", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-        }
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(codeSent, code);
+        signIn(credential);
+//        try {
+//        } catch (Exception e) {
+//            Toast toast = Toast.makeText(this, "Verification Code is wrong", Toast.LENGTH_SHORT);
+//            toast.setGravity(Gravity.CENTER, 0, 0);
+//            toast.show();
+//        }
     }
 
-    private void signInWithPhoneAuthCredential(final PhoneAuthCredential credential) {
-        FirebaseAuth.getInstance().signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            signIn(credential);
-                        } else {
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                Toast.makeText(getApplicationContext(), "Incorrect code", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-                });
-    }
+
 }

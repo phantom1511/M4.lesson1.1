@@ -12,10 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".PhoneActivity"></activity>
+        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".PhoneActivity" />
         <activity
             android:name=".onBoard.OnBoardActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".FormActivity" />
         <activity
             android:name=".MainActivity"
