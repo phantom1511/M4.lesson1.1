@@ -31,12 +31,18 @@ import com.dastan.m4lesson11.R;
 import com.dastan.m4lesson11.Task;
 import com.dastan.m4lesson11.TaskAdapter;
 import com.dastan.m4lesson11.interfaces.OnItemClickListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeFragment extends Fragment {
 
@@ -86,7 +92,24 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         App.getDatabase().taskDao().delete(list.get(position));
+                        Map<String, Object> task = new HashMap<>();
+                        String taskId = FirebaseAuth.getInstance().getUid();
+                        FirebaseFirestore.getInstance()
+                                .collection("tasks")
+                                .document(taskId)
+                                .delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                                        if (task.isSuccessful()){
+                                            Toast.makeText(getContext(), "Succeed", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
                     }
+
                 });
                 builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override

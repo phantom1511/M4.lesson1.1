@@ -9,15 +9,14 @@ import android.os.Bundle;
 
 import com.dastan.m4lesson11.onBoard.OnBoardActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -32,15 +31,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.dastan.m4lesson11.ui.home.HomeFragment.setNotSorted;
@@ -55,11 +48,12 @@ public class MainActivity extends AppCompatActivity {
     private boolean sort;
     private TextView nameText, emailText;
     private static String PREF_STRING = "pref_value";
+    private SharedPreferences sharedPreferencesForTextView;
+    private String name, email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         SharedPreferences preferences = getSharedPreferences("settings", Context.MODE_PRIVATE);
         boolean isShown = preferences.getBoolean("isShown", false);
 
@@ -96,18 +90,26 @@ public class MainActivity extends AppCompatActivity {
         });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                getPreferenc();
+                return false;
+            }
+        });
         View header = navigationView.getHeaderView(0);
         nameText = header.findViewById(R.id.textName);
         emailText = header.findViewById(R.id.textEmail);
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(PREF_STRING, 0);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        String name = sharedPreferences.getString("getName", "");
-        String email = sharedPreferences.getString("getEmail", "");
-        editor.apply();
+//        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(PREF_STRING, 0);
+//        SharedPreferences.Editor editor = sharedPref.edit();
+////        String name = sharedPreferencesForTextView.getString("getName", "");
+////        String email = sharedPreferencesForTextView.getString("getEmail", "");
+//        editor.apply();
+
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                startActivityForResult(new Intent(MainActivity.this, ProfileActivity.class), 101);
             }
         });
 
@@ -121,7 +123,36 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        getPreferenc();
+    }
 
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        getPreferenc();
+        if (name!=null&&email!=null) {
+            nameText.setText(savedInstanceState.getString("key"));
+            emailText.setText(savedInstanceState.getString("key1"));
+        }
+    }
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        if (name!=null&&email!=null) {
+            outState.putString("key", name);
+            outState.putString("key1", email);
+//        finish();
+        }
+    }
+
+    private void getPreferenc() {
+        if (sharedPreferencesForTextView != null) {
+            sharedPreferencesForTextView = getPreferences(MODE_PRIVATE);
+            String savedName = sharedPreferencesForTextView.getString("getNamePref", "");
+            String savedEmail = sharedPreferencesForTextView.getString("getEmailPref", "");
+            nameText.setText(savedName);
+            emailText.setText(savedEmail);
+        }
 
     }
 
@@ -177,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    Toast.makeText(getApplicationContext(),"It been Canceled", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "It been Canceled", Toast.LENGTH_SHORT).show();
                 }
             });
             AlertDialog alertDialog = builder.create();
@@ -186,8 +217,34 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void savePreference() {
+        sharedPreferencesForTextView = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor =sharedPreferencesForTextView.edit();
+        editor.putString("getNamePref", name);
+        editor.putString("getEmailPref", email);
+        editor.apply();
+        Log.e("TAG", "savePreference: My METHOD"+name );
+        Log.e("TAG", "savePreference: My METHOD"+email );
+        nameText.setText(name);
+        emailText.setText(email);
+    }
 
-//    public static void sortMethod() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == 101 && data != null) {
+            name = data.getStringExtra("getName");
+            email = data.getStringExtra("getEmail");
+            Log.e("TAG", "onActivityResult: " + name);
+            Log.e("TAG", "onActivityResult: " + email);
+            savePreference();
+            nameText.setText(name);
+            emailText.setText(email);
+            if (name != null && email != null) {
+            }
+        }
+    }
+    //    public static void sortMethod() {
 //        Collections.sort(list, new Comparator<Task>() {
 //            @Override
 //            public int compare(Task o1, Task o2) {
@@ -196,4 +253,11 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //        adapter.notifyDataSetChanged();
 //    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        savePreference();
+    }
 }

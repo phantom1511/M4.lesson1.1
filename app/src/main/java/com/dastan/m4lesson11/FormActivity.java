@@ -85,27 +85,47 @@ public class FormActivity extends AppCompatActivity {
             task.setTitle(title);
             task.setDesc(desc);
             App.getDatabase().taskDao().update(task);
+            Map<String, Object> task = new HashMap<>();
+            task.put("title", title);
+            task.put("description", desc);
+            String taskId = FirebaseAuth.getInstance().getUid();
+            FirebaseFirestore.getInstance()
+                    .collection("tasks")
+                    .document(taskId)
+                    .set(task)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                            if (task.isSuccessful()){
+                                Toast.makeText(FormActivity.this ,"Succeed", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(FormActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
         }else {
             task = new Task(title, desc);
             App.getDatabase().taskDao().insert(task);
-        }
-        Map<String, Object> task = new HashMap<>();
-        task.put("title", title);
-        task.put("description", desc);
-        String taskId = FirebaseAuth.getInstance().getUid();
-        FirebaseFirestore.getInstance()
-                .collection("tasks")
-                .add(task)
-                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                    @Override
-                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<DocumentReference> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(FormActivity.this, "Succeed", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(FormActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+            Map<String, Object> task = new HashMap<>();
+            task.put("title", title);
+            task.put("description", desc);
+            String taskId = FirebaseAuth.getInstance().getUid();
+            FirebaseFirestore.getInstance()
+                    .collection("tasks")
+                    .add(task)
+                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                        @Override
+                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<DocumentReference> task) {
+                            if (task.isSuccessful()){
+                                Toast.makeText(FormActivity.this, "Succeed", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(FormActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        }
+
+
         //intent.putExtra("task", task);
         //intent.putExtra("desc", task);
         //setResult(RESULT_OK, intent);

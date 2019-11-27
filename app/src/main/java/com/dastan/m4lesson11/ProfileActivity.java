@@ -118,19 +118,21 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     }
                 });
-        startActivity(new Intent(this, MainActivity.class));
         sharedPref = getApplicationContext().getSharedPreferences(PREF_STRING, 0);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("getName", name);
         editor.putString("getEmail", email);
         editor.apply();
+        Intent intent=new Intent();
+        intent.putExtra("getName", name).putExtra("getEmail", email);
+        setResult(RESULT_OK,intent);
+        finish();
 //        SharedPreferences sharedPreferences = getSharedPreferences("profile", Context.MODE_PRIVATE);
 //        sharedPreferences.edit().putString("getName", name).apply();
 //        sharedPreferences.edit().putString("getEmail", email).apply();
 //        intent.putExtra("getName", name);
 //        intent.putExtra("getEmail", email);
 //        startActivity(intent);
-        finish();
 
 //        sharedPreferences.edit().putString("sentName", name).apply();
 //        sharedPreferences.edit().putString("sentEmail", email).apply();
