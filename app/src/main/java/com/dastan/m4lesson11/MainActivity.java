@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
     private static TaskAdapter adapter;
     private Task task;
     private boolean sort;
+    private TextView nameText, emailText;
+    private static String PREF_STRING = "pref_value";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,12 +97,20 @@ public class MainActivity extends AppCompatActivity {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         View header = navigationView.getHeaderView(0);
+        nameText = header.findViewById(R.id.textName);
+        emailText = header.findViewById(R.id.textEmail);
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences(PREF_STRING, 0);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        String name = sharedPreferences.getString("getName", "");
+        String email = sharedPreferences.getString("getEmail", "");
+        editor.apply();
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             }
         });
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
