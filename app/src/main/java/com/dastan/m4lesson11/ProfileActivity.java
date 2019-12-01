@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -28,6 +29,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -40,7 +44,6 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView imageProf;
     private final int Pick_image = 1;
     private SharedPreferences sharedPref;
-    private static String PREF_STRING = "pref_value";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,14 +121,14 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     }
                 });
-        sharedPref = getApplicationContext().getSharedPreferences(PREF_STRING, 0);
+        sharedPref = getApplicationContext().getSharedPreferences("settings", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("getName", name);
         editor.putString("getEmail", email);
         editor.apply();
-        Intent intent=new Intent();
+        Intent intent = new Intent();
         intent.putExtra("getName", name).putExtra("getEmail", email);
-        setResult(RESULT_OK,intent);
+        setResult(RESULT_OK, intent);
         finish();
 //        SharedPreferences sharedPreferences = getSharedPreferences("profile", Context.MODE_PRIVATE);
 //        sharedPreferences.edit().putString("getName", name).apply();
@@ -141,19 +144,44 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case Pick_image:
-                if (resultCode == RESULT_OK) {
-                    try {
-                        final Uri imageUri = data.getData();
-                        final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                        imageProf.setImageBitmap(selectedImage);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                }
+        if (resultCode == RESULT_OK && requestCode == Pick_image && data != null) {
+            Uri uri = data.getData();
+            imageProf.setImageURI(uri);
+            upload(uri);
         }
+//        switch (requestCode) {
+//            case Pick_image:
+//                if (resultCode == RESULT_OK) {
+//                    try {
+//                        final Uri imageUri = data.getData();
+//                        final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+//                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+//                        imageProf.setImageBitmap(selectedImage);
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//        }
+    }
+
+    private void upload(Uri uri) {
+        final ProgressBar imgProgressBar = findViewById(R.id.imgProgressBar);
+        imgProgressBar.setVisibility(View.VISIBLE);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        String userId = FirebaseAuth.getInstance().getUid();
+        StorageReference reference = storage.getReference(userId).child("images/*" + uri.getLastPathSegment());
+        UploadTask uploadTask = reference.putFile(uri);
+        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if (task.isSuccessful()) {
+                    Toaster.show("Succeed");
+                    imgProgressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
     }
 }
 

@@ -1,33 +1,21 @@
 package com.dastan.m4lesson11;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.Log;
-import android.view.SurfaceControl;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dastan.m4lesson11.ui.home.HomeFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +27,7 @@ public class FormActivity extends AppCompatActivity {
     private EditText editDesc;
     private List<Task> list;
     private TaskAdapter adapter;
-    private Task task;
+    private Task mTask;
 
 
     @Override
@@ -51,11 +39,11 @@ public class FormActivity extends AppCompatActivity {
 
         editTitle = findViewById(R.id.editText1);
         editDesc = findViewById(R.id.editText2);
-        task = (Task) getIntent().getSerializableExtra("homeFragment");
+        mTask = (Task) getIntent().getSerializableExtra("homeFragment");
 
-        if (task != null) {
-            editTitle.setText(task.getTitle());
-            editDesc.setText(task.getDesc(), TextView.BufferType.EDITABLE);
+        if (mTask != null) {
+            editTitle.setText(mTask.getTitle());
+            editDesc.setText(mTask.getDesc(), TextView.BufferType.EDITABLE);
         }
     }
 
@@ -81,55 +69,96 @@ public class FormActivity extends AppCompatActivity {
         String title = editTitle.getText().toString().trim();
         String desc = editDesc.getText().toString().trim();
         //Intent intent = new Intent();
-        if (task != null){
-            task.setTitle(title);
-            task.setDesc(desc);
-            App.getDatabase().taskDao().update(task);
-            Map<String, Object> task = new HashMap<>();
-            task.put("title", title);
-            task.put("description", desc);
-            String taskId = FirebaseAuth.getInstance().getUid();
-            FirebaseFirestore.getInstance()
-                    .collection("tasks")
-                    .document(taskId)
-                    .set(task)
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
-                            if (task.isSuccessful()){
-                                Toast.makeText(FormActivity.this ,"Succeed", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(FormActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+        if (mTask != null){
+            mTask.setTitle(title);
+            mTask.setDesc(desc);
+            updateTaskInFirestore();
+//            Map<String, Object> task = new HashMap<>();
+//            task.put("title", title);
+//            task.put("description", desc);
+//            String taskId = FirebaseAuth.getInstance().getUid();
+//            FirebaseFirestore.getInstance()
+//                    .collection("tasks")
+//                    .document(taskId)
+//                    .set(task)
+//                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                        @Override
+//                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+//                            if (task.isSuccessful()){
+//                                Toast.makeText(FormActivity.this ,"Succeed", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(FormActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+            ProgressBar formProgressBar = findViewById(R.id.progressBar);
+            formProgressBar.setVisibility(View.VISIBLE);
         }else {
-            task = new Task(title, desc);
-            App.getDatabase().taskDao().insert(task);
-            Map<String, Object> task = new HashMap<>();
-            task.put("title", title);
-            task.put("description", desc);
-            String taskId = FirebaseAuth.getInstance().getUid();
-            FirebaseFirestore.getInstance()
-                    .collection("tasks")
-                    .add(task)
-                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-                        @Override
-                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<DocumentReference> task) {
-                            if (task.isSuccessful()){
-                                Toast.makeText(FormActivity.this, "Succeed", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(FormActivity.this, "Failed", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+            mTask = new Task(title, desc);
+            saveToFirestore();
+//            Map<String, Object> mTask = new HashMap<>();
+//            mTask.put("title", title);
+//            mTask.put("description", desc);
+//            String taskId = FirebaseAuth.getInstance().getUid();
+//            FirebaseFirestore.getInstance()
+//                    .collection("tasks")
+//                    .add(mTask)
+//                    .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+//                        @Override
+//                        public void onComplete(@NonNull com.google.android.gms.tasks.Task<DocumentReference> mTask) {
+//                            if (mTask.isSuccessful()){
+//                                Toast.makeText(FormActivity.this, "Succeed", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(FormActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
+
+            ProgressBar formProgressBar = findViewById(R.id.progressBar);
+            formProgressBar.setVisibility(View.VISIBLE);
         }
 
-
-        //intent.putExtra("task", task);
-        //intent.putExtra("desc", task);
+        //intent.putExtra("mTask", mTask);
+        //intent.putExtra("desc", mTask);
         //setResult(RESULT_OK, intent);
-        //Log.e("save2", task.getTitle() + task.getDesc());
-        finish();
+        //Log.e("save2", mTask.getTitle() + mTask.getDesc());
+    }
+
+    private void saveToFirestore(){
+        FirebaseFirestore.getInstance()
+                .collection("tasks")
+                .add(mTask)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<DocumentReference> task) {
+                        if (task.isSuccessful()) {
+                            mTask.setId(task.getResult().getId());
+                            App.getDatabase().taskDao().insert(mTask);
+                            Toaster.show("Succeed");
+                            finish();
+                        } else {
+                            Toaster.show("Error" + task.getException().getMessage());
+                        }
+                    }
+                });
+    }
+
+    private void updateTaskInFirestore(){
+        FirebaseFirestore.getInstance()
+                .collection("tasks")
+                .document(mTask.getId())
+                .set(mTask)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                        if (task.isSuccessful()){
+                            App.getDatabase().taskDao().update(mTask);
+                            Toaster.show("Succeed");
+                            finish();
+                        } else {
+                            Toaster.show("Error of update" + task.getException().getMessage());
+                        }
+                    }
+                });
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,23 +7,36 @@
     android:orientation="vertical"
     tools:context=".FormActivity">
 
+
     <EditText
         android:id="@+id/editText1"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:hint="Type task"/>
+        android:hint="Type task"
+        android:layout_alignParentTop="true"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"/>
 
     <EditText
         android:id="@+id/editText2"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:hint="description"/>
+        android:hint="description"
+        android:layout_below="@id/editText1"/>
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:text="save"
-        android:onClick="onSave"/>
+        android:onClick="onSave"
+        android:layout_below="@+id/editText2"/>
 
-</LinearLayout>
+
+</RelativeLayout>

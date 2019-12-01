@@ -30,11 +30,13 @@ import com.dastan.m4lesson11.MainActivity;
 import com.dastan.m4lesson11.R;
 import com.dastan.m4lesson11.Task;
 import com.dastan.m4lesson11.TaskAdapter;
+import com.dastan.m4lesson11.Toaster;
 import com.dastan.m4lesson11.interfaces.OnItemClickListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -92,29 +94,43 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         App.getDatabase().taskDao().delete(list.get(position));
-                        Map<String, Object> task = new HashMap<>();
-                        String taskId = FirebaseAuth.getInstance().getUid();
                         FirebaseFirestore.getInstance()
                                 .collection("tasks")
-                                .document(taskId)
+                                .document(list.get(position).getId())
                                 .delete()
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
-                                        if (task.isSuccessful()){
-                                            Toast.makeText(getContext(), "Succeed", Toast.LENGTH_SHORT).show();
+                                        if (task.isSuccessful()) {
+                                            Toaster.show("Succeed");
                                         } else {
-                                            Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+                                            Toaster.show("Error" + task.getException().getMessage());
                                         }
                                     }
                                 });
+//                        Map<String, Object> task = new HashMap<>();
+//                        String taskId = FirebaseAuth.getInstance().getUid();
+//                        FirebaseFirestore.getInstance()
+//                                .collection("tasks")
+//                                .document(taskId)
+//                                .delete()
+//                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+//                                        if (task.isSuccessful()){
+//                                            Toast.makeText(getContext(), "Succeed", Toast.LENGTH_SHORT).show();
+//                                        } else {
+//                                            Toast.makeText(getContext(), "Failed", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    }
+//                                });
                     }
 
                 });
                 builder.setPositiveButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getContext(),"It been Canceled", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "It been Canceled", Toast.LENGTH_SHORT).show();
                     }
                 });
                 AlertDialog alertDialog = builder.create();
@@ -140,13 +156,13 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    public static void setSorted(){
+    public static void setSorted() {
         list.clear();
         list.addAll(sorted);
         adapter.notifyDataSetChanged();
     }
 
-    public static void setNotSorted(){
+    public static void setNotSorted() {
         list.clear();
         list.addAll(notSorted);
         adapter.notifyDataSetChanged();

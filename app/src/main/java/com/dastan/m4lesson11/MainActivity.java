@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
     private Task task;
     private boolean sort;
     private TextView nameText, emailText;
-    private static String PREF_STRING = "pref_value";
-    private SharedPreferences sharedPreferencesForTextView;
     private String name, email;
 
     @Override
@@ -56,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SharedPreferences preferences = getSharedPreferences("settings", Context.MODE_PRIVATE);
         boolean isShown = preferences.getBoolean("isShown", false);
+        name = preferences.getString("getName", "Dastan Tulokulov");
+        email = preferences.getString("getEmail", "dastan.tulokulov@gmail.com");
 
         if (!isShown) {
             startActivity(new Intent(this, OnBoardActivity.class));
@@ -93,18 +93,15 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                getPreferenc();
                 return false;
             }
         });
         View header = navigationView.getHeaderView(0);
         nameText = header.findViewById(R.id.textName);
         emailText = header.findViewById(R.id.textEmail);
-//        SharedPreferences sharedPref = getApplicationContext().getSharedPreferences(PREF_STRING, 0);
-//        SharedPreferences.Editor editor = sharedPref.edit();
-////        String name = sharedPreferencesForTextView.getString("getName", "");
-////        String email = sharedPreferencesForTextView.getString("getEmail", "");
-//        editor.apply();
+
+        nameText.setText(name);
+        emailText.setText(email);
 
         header.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,36 +120,6 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        getPreferenc();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        getPreferenc();
-        if (name!=null&&email!=null) {
-            nameText.setText(savedInstanceState.getString("key"));
-            emailText.setText(savedInstanceState.getString("key1"));
-        }
-    }
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        if (name!=null&&email!=null) {
-            outState.putString("key", name);
-            outState.putString("key1", email);
-//        finish();
-        }
-    }
-
-    private void getPreferenc() {
-        if (sharedPreferencesForTextView != null) {
-            sharedPreferencesForTextView = getPreferences(MODE_PRIVATE);
-            String savedName = sharedPreferencesForTextView.getString("getNamePref", "");
-            String savedEmail = sharedPreferencesForTextView.getString("getEmailPref", "");
-            nameText.setText(savedName);
-            emailText.setText(savedEmail);
-        }
 
     }
 
@@ -169,14 +136,6 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-//        fragment.getChildFragmentManager().getFragments().get(0)
-//                .onActivityResult(requestCode, resultCode, data);
-//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -217,18 +176,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void savePreference() {
-        sharedPreferencesForTextView = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor editor =sharedPreferencesForTextView.edit();
-        editor.putString("getNamePref", name);
-        editor.putString("getEmailPref", email);
-        editor.apply();
-        Log.e("TAG", "savePreference: My METHOD"+name );
-        Log.e("TAG", "savePreference: My METHOD"+email );
-        nameText.setText(name);
-        emailText.setText(email);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -237,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
             email = data.getStringExtra("getEmail");
             Log.e("TAG", "onActivityResult: " + name);
             Log.e("TAG", "onActivityResult: " + email);
-            savePreference();
             nameText.setText(name);
             emailText.setText(email);
             if (name != null && email != null) {
@@ -253,11 +199,4 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //        adapter.notifyDataSetChanged();
 //    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        savePreference();
-    }
 }

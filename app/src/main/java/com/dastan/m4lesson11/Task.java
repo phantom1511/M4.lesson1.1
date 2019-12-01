@@ -1,15 +1,19 @@
 package com.dastan.m4lesson11;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import com.google.firebase.firestore.Exclude;
 
 import java.io.Serializable;
 
 @Entity
 public class Task implements Serializable {
 
-    @PrimaryKey(autoGenerate = true)
-    private long id;
+    @NonNull
+    @PrimaryKey
+    private String id;
     private String title;
     private String desc;
 
@@ -18,11 +22,12 @@ public class Task implements Serializable {
         this.desc = desc;
     }
 
-    public long getId() {
+    @Exclude
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
