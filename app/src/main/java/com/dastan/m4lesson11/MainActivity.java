@@ -5,34 +5,34 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-
-import com.dastan.m4lesson11.onBoard.OnBoardActivity;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import android.os.PersistableBundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.bumptech.glide.Glide;
+import com.dastan.m4lesson11.onBoard.OnBoardActivity;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.Menu;
-import android.widget.TextView;
-import android.widget.Toast;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean sort;
     private TextView nameText, emailText;
     private String name, email;
+    private ImageView pImage1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,11 +98,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         View header = navigationView.getHeaderView(0);
-        nameText = header.findViewById(R.id.textName);
-        emailText = header.findViewById(R.id.textEmail);
 
-        nameText.setText(name);
-        emailText.setText(email);
 
         header.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +106,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(new Intent(MainActivity.this, ProfileActivity.class), 101);
             }
         });
+        nameText = header.findViewById(R.id.textName);
+        emailText = header.findViewById(R.id.textEmail);
+        pImage1 = header.findViewById(R.id.pImage);
+
+
+        nameText.setText(name);
+        emailText.setText(email);
+        setImageProf();
 
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -182,14 +187,29 @@ public class MainActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == 101 && data != null) {
             name = data.getStringExtra("getName");
             email = data.getStringExtra("getEmail");
+
             Log.e("TAG", "onActivityResult: " + name);
             Log.e("TAG", "onActivityResult: " + email);
             nameText.setText(name);
             emailText.setText(email);
+            setImageProf();
             if (name != null && email != null) {
             }
         }
     }
+
+    private void setImageProf(){
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        String userId = FirebaseAuth.getInstance().getUid();
+        storageReference.child("images/*" + userId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(MainActivity.this).load(uri).into(pImage1);
+            }
+        });
+    }
+
+
     //    public static void sortMethod() {
 //        Collections.sort(list, new Comparator<Task>() {
 //            @Override

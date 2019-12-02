@@ -1,30 +1,24 @@
 package com.dastan.m4lesson11;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -33,8 +27,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView imageProf;
     private final int Pick_image = 1;
     private SharedPreferences sharedPref;
+    private ImageView pImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_profile);
         editName = findViewById(R.id.editName);
         editEmail = findViewById(R.id.editEmail);
+        pImage = findViewById(R.id.pImage);
         imageProf = findViewById(R.id.imageProfile);
         imageProf.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +73,13 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     }
                 });
+        StorageReference storage = FirebaseStorage.getInstance().getReference();
+        storage.child("images/*" + userId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with(ProfileActivity.this).load(uri).into(imageProf);
+            }
+        });
     }
 
     private void loadData2() {
@@ -170,7 +171,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         String userId = FirebaseAuth.getInstance().getUid();
-        StorageReference reference = storage.getReference(userId).child("images/*" + uri.getLastPathSegment());
+        StorageReference reference = storage.getReference().child("images/*" + userId);
         UploadTask uploadTask = reference.putFile(uri);
         uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
