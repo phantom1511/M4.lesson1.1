@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".FormActivity">
 
 
@@ -13,6 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:hint="Type task"
+        style="@style/EditTextStyle"
+        android:background="@drawable/bg_edit"
         android:layout_alignParentTop="true"/>
 
     <ProgressBar
@@ -28,6 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:hint="description"
+        android:layout_marginTop="16dp"
+        style="@style/EditTextStyle"
         android:layout_below="@id/editText1"/>
 
     <Button
@@ -35,8 +40,12 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:text="save"
+        android:textColor="#ffffff"
+        android:textSize="20dp"
         android:onClick="onSave"
-        android:layout_below="@+id/editText2"/>
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/editText2"
+        android:background="@drawable/bg_button"/>
 
 
 </RelativeLayout>

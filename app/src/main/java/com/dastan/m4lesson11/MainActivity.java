@@ -204,7 +204,7 @@ public class MainActivity extends AppCompatActivity {
         storageReference.child("images/*" + userId).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Glide.with(MainActivity.this).load(uri).into(pImage1);
+                Glide.with(MainActivity.this).load(uri).circleCrop().into(pImage1);
             }
         });
     }
